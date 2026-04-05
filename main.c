@@ -7,9 +7,35 @@
 #include <unistd.h>
 
 int main() {
-  // Getting the current date time
-  time_t now = time(NULL);
-  printf("The current time is: %s", ctime(&now));
+  FILE *fptr;
+  char buffer[80];
+  time_t raw_time;
+  struct tm *time_info;
+
+  // 1. Get current time
+  time(&raw_time);
+
+  // 2. Convert to local time
+  time_info = localtime(&raw_time);
+
+  // 3. Format the time into a string
+  // refer to strftime documentation
+  strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", time_info);
+
+  // 4. Open file for writing ("w" overwrites, "a" appends)
+  fptr = fopen(".bible_cache", "w");
+  if (fptr == NULL) {
+    printf("Error opening file!\n");
+    return 1;
+  }
+
+  // 5. Write the formatted string to the file
+  fprintf(fptr, "Current Date and Time: %s", buffer);
+
+  // 6. Close the file
+  fclose(fptr);
+
+  printf("Date and time successfully stored in .bible_cache");
 
   struct sockaddr_in address;
   inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
