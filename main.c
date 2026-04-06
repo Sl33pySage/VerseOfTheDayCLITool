@@ -4,8 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+
 #define PORT 80
 
 int main() {
@@ -41,6 +43,11 @@ int main() {
   printf("Date and time successfully stored in .bible_cache");
 
   // Networking:
+  int getaddrinfo(
+      const char *node,    // e.g. "https://bible-api.com/ or IP address"
+      const char *service, // e.g. "http" or port number
+      const struct addrinfo *hints, struct addrinfo **res);
+
   // 1. Create a socket
   struct sockaddr_in address;
   // 192.42.93.30
