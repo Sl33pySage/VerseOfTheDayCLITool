@@ -45,10 +45,28 @@ int main() {
   printf("Date and time successfully stored in .bible_cache\n");
 
   // Networking:
-  int getaddrinfo(
-      const char *node,    // e.g. "https://bible-api.com/ or IP address"
-      const char *service, // e.g. "http" or port number
-      const struct addrinfo *hints, struct addrinfo **res);
+  // int getaddrinfo(
+  //    const char *node,    // e.g. "https://bible-api.com/ or IP address"
+  //    const char *service, // e.g. "http" or port number
+  //    const struct addrinfo *hints, struct addrinfo **res);
+
+  // Client:
+  int status;
+  struct addrinfo hints, *res, *p;
+  char ipstr[INET6_ADDRSTRLEN];
+  // struct addrinfo *servinfo; // Will point to results
+
+  memset(&hints, 0, sizeof hints); // Make sure the struct is empty
+  hints.ai_family = AF_UNSPEC;     // don't care IPv4 or IPv6
+  hints.ai_socktype = SOCK_STREAM; // TCP Stream Sockets
+
+  // Get ready to Connect
+  if ((status = getaddrinfo("bible-api.com/", "80", &hints, &p)) != 0) {
+    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
+    return 2;
+  };
+
+  printf("IP addresses info: %c\n", status);
 
   // Client:
   int status;
@@ -65,8 +83,8 @@ int main() {
   printf("status: %d\n", status);
 
   // 1. Create a socket
-  int socket(int domain, int type, int protocol);
-  struct sockaddr_in address;
+  // int socket(int domain, int type, int protocol);
+  // struct sockaddr_in address;
   // 192.42.93.30
-  inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
+  // inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
 }
