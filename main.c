@@ -66,7 +66,7 @@ int main() {
     return 2;
   };
 
-  printf("IP addresses info: %d\n", status);
+  printf("IP addresses info: %c\n", status);
 
   // 1. Create a socket
   // int socket(int domain, int type, int protocol);
