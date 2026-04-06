@@ -10,6 +10,8 @@
 #include <unistd.h>
 // #define PORT 80
 
+#define PORT 80
+
 int main() {
   FILE *fptr;
   char buffer[80];
