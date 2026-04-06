@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+#define PORT 80
 
 #define PORT 80
 
