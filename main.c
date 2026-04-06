@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-#define PORT 80
+// #define PORT 80
 
 #define PORT 80
 
@@ -42,13 +42,27 @@ int main() {
   // 6. Close the file
   fclose(fptr);
 
-  printf("Date and time successfully stored in .bible_cache");
+  printf("Date and time successfully stored in .bible_cache\n");
 
   // Networking:
   int getaddrinfo(
       const char *node,    // e.g. "https://bible-api.com/ or IP address"
       const char *service, // e.g. "http" or port number
       const struct addrinfo *hints, struct addrinfo **res);
+
+  // Client:
+  int status;
+  struct addrinfo hints;
+  struct addrinfo *servinfo; // Will point to results
+
+  memset(&hints, 0, sizeof(hints)); // Make sure the struct is empty
+  hints.ai_family = AF_UNSPEC;      // don't care IPv4 or IPv6
+  hints.ai_socktype = SOCK_STREAM;  // TCP Stream Sockets
+
+  // Get ready to Connect
+  status = getaddrinfo("https://bible-api.com/", "80", &hints, &servinfo);
+
+  printf("status: %d\n", status);
 
   // 1. Create a socket
   int socket(int domain, int type, int protocol);
