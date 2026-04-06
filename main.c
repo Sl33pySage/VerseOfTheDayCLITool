@@ -68,6 +68,20 @@ int main() {
 
   printf("IP addresses info: %c\n", status);
 
+  // Client:
+  int status;
+  struct addrinfo hints;
+  struct addrinfo *servinfo; // Will point to results
+
+  memset(&hints, 0, sizeof(hints)); // Make sure the struct is empty
+  hints.ai_family = AF_UNSPEC;      // don't care IPv4 or IPv6
+  hints.ai_socktype = SOCK_STREAM;  // TCP Stream Sockets
+
+  // Get ready to Connect
+  status = getaddrinfo("https://bible-api.com/", "80", &hints, &servinfo);
+
+  printf("status: %d\n", status);
+
   // 1. Create a socket
   // int socket(int domain, int type, int protocol);
   // struct sockaddr_in address;
