@@ -1,5 +1,6 @@
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,6 +51,7 @@ int main() {
       const struct addrinfo *hints, struct addrinfo **res);
 
   // 1. Create a socket
+  int socket(int domain, int type, int protocol);
   struct sockaddr_in address;
   // 192.42.93.30
   inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
