@@ -43,35 +43,9 @@ int main() {
   printf("Date and time successfully stored in .bible_cache\n");
 
   // Networking:
-<<<<<<< HEAD
-=======
-  // int getaddrinfo(
-  //    const char *node,    // e.g. "https://bible-api.com/ or IP address"
-  //    const char *service, // e.g. "http" or port number
-  //    const struct addrinfo *hints, struct addrinfo **res);
-
-  // Client:
   int status;
   struct addrinfo hints, *res, *p;
   char ipstr[INET6_ADDRSTRLEN];
-  // struct addrinfo *servinfo; // Will point to results
-
-  memset(&hints, 0, sizeof hints); // Make sure the struct is empty
-  hints.ai_family = AF_UNSPEC;     // don't care IPv4 or IPv6
-  hints.ai_socktype = SOCK_STREAM; // TCP Stream Sockets
-
-  // Get ready to Connect
-  if ((status = getaddrinfo("bible-api.com/", "80", &hints, &p)) != 0) {
-    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
-    return 2;
-  };
-
-  printf("IP addresses info: %c\n", status);
-
-  // Client:
->>>>>>> main
-  int status;
-  struct addrinfo hints, *res, *p;
 
   memset(&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC;
@@ -83,12 +57,22 @@ int main() {
   };
 
   for (p = res; p != NULL; p = p->ai_next) {
-    printf("PF: %p\n", p->ai_addr);
+    void *addr;
+    char *ipver;
+    // Extract IP based on address family
+    if (p->ai_family == AF_INET) { // IPv4
+      struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+      addr = &(ipv4->sin_addr);
+      ipver = "IPv4";
+    }
+
+    // Convert the IP to a string and print
+    inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
+    printf(" %s: %s\n", ipver, ipstr);
   }
   freeaddrinfo(res);
   return 0;
 
-<<<<<<< HEAD
   /*
  int getaddrinfo(const char *node,    // e.g., "www.example.com" or IP Address
                  const char *service, // e.g., "http" or port number "80"
@@ -106,12 +90,7 @@ int main() {
    char *ai_canonname;
    struct addrinfo *ai_next;
  };
-*/
-=======
-  // 1. Create a socket
-  // int socket(int domain, int type, int protocol);
-  // struct sockaddr_in address;
->>>>>>> main
   // 192.42.93.30
   // inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
+*/
 }
