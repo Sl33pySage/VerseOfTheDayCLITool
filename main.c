@@ -45,29 +45,47 @@ int main() {
   // Networking:
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
   // int getaddrinfo(
   //    const char *node,    // e.g. "https://bible-api.com/ or IP address"
   //    const char *service, // e.g. "http" or port number
   //    const struct addrinfo *hints, struct addrinfo **res);
 
   // Client:
+>>>>>>> main
   int status;
   struct addrinfo hints, *res, *p;
   char ipstr[INET6_ADDRSTRLEN];
-  // struct addrinfo *servinfo; // Will point to results
 
-  memset(&hints, 0, sizeof hints); // Make sure the struct is empty
-  hints.ai_family = AF_UNSPEC;     // don't care IPv4 or IPv6
-  hints.ai_socktype = SOCK_STREAM; // TCP Stream Sockets
+  memset(&hints, 0, sizeof hints);
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
 
-  // Get ready to Connect
-  if ((status = getaddrinfo("bible-api.com/", "80", &hints, &p)) != 0) {
+  if ((status = getaddrinfo("bible-api.com", "80", &hints, &res)) != 0) {
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
-    return 2;
+    return 1;
   };
 
-  printf("IP addresses info: %c\n", status);
+  for (p = res; p != NULL; p = p->ai_next) {
+    void *addr;
+    char *ipver;
+    // Extract IP based on address family
+    if (p->ai_family == AF_INET) { // IPv4
+      struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+      addr = &(ipv4->sin_addr);
+      ipver = "IPv4";
+    }
 
+<<<<<<< HEAD
+    // Convert the IP to a string and print
+    inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
+    printf(" %s: %s\n", ipver, ipstr);
+  }
+  freeaddrinfo(res);
+  return 0;
+
+=======
   // Client:
 >>>>>>> main
   int status;
@@ -89,6 +107,7 @@ int main() {
   return 0;
 
 <<<<<<< HEAD
+>>>>>>> main
   /*
  int getaddrinfo(const char *node,    // e.g., "www.example.com" or IP Address
                  const char *service, // e.g., "http" or port number "80"
@@ -106,12 +125,16 @@ int main() {
    char *ai_canonname;
    struct addrinfo *ai_next;
  };
+<<<<<<< HEAD
+=======
 */
 =======
   // 1. Create a socket
   // int socket(int domain, int type, int protocol);
   // struct sockaddr_in address;
 >>>>>>> main
+>>>>>>> main
   // 192.42.93.30
   // inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
+*/
 }
