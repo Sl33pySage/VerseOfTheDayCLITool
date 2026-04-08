@@ -48,7 +48,6 @@ int main() {
   //    const char *service, // e.g. "http" or port number
   //    const struct addrinfo *hints, struct addrinfo **res);
 
-  
   int status;
   struct addrinfo hints, *res, *p;
   char ipstr[INET6_ADDRSTRLEN];
@@ -78,14 +77,14 @@ int main() {
   }
   freeaddrinfo(res);
   return 0;
-  
+
   /*
  int getaddrinfo(const char *node,    // e.g., "www.example.com" or IP Address
                  const char *service, // e.g., "http" or port number "80"
                  const struct addrinfo *hints, // criteria for results
                  struct addrinfo **res);       // pointer to the resulting list
- // struct addrinfo hints, *res;
- // struct sockaddr_in address;
+ struct addrinfo hints, *res;
+ struct sockaddr_in address;
  struct addrinfo {
    int ai_flags;
    int ai_family;
@@ -96,11 +95,14 @@ int main() {
    char *ai_canonname;
    struct addrinfo *ai_next;
  };
-  // 1. Create a socket
-  // int socket(int domain, int type, int protocol);
-  // struct sockaddr_in address;
+  1. Create a socket
+  int socket(int domain, int type, int protocol);
+  struct sockaddr_in address;
 
-  // 192.42.93.30
-  // inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
+
+  IPv4: showip result off bible-api.com:
+      5.161.129.94
+  192.42.93.30
+  inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
 */
 }
