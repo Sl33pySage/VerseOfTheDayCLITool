@@ -48,7 +48,6 @@ int main() {
   //    const char *service, // e.g. "http" or port number
   //    const struct addrinfo *hints, struct addrinfo **res);
 
-  
   int status;
   struct addrinfo hints, *res, *p;
   char ipstr[INET6_ADDRSTRLEN];
@@ -78,7 +77,6 @@ int main() {
   }
   freeaddrinfo(res);
   return 0;
-  
   /*
  int getaddrinfo(const char *node,    // e.g., "www.example.com" or IP Address
                  const char *service, // e.g., "http" or port number "80"
