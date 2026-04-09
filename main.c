@@ -78,31 +78,4 @@ int main() {
   }
   freeaddrinfo(res);
   return 0;
-  /*
- int getaddrinfo(const char *node,    // e.g., "www.example.com" or IP Address
-                 const char *service, // e.g., "http" or port number "80"
-                 const struct addrinfo *hints, // criteria for results
-                 struct addrinfo **res);       // pointer to the resulting list
- struct addrinfo hints, *res;
- struct sockaddr_in address;
- struct addrinfo {
-   int ai_flags;
-   int ai_family;
-   int ai_socktype;
-   int ai_protocol;
-   socklen_t ai_addrlen;
-   struct sockaddr *ai_addr;
-   char *ai_canonname;
-   struct addrinfo *ai_next;
- };
-  1. Create a socket
-  int socket(int domain, int type, int protocol);
-  struct sockaddr_in address;
-
-
-  IPv4: showip result off bible-api.com:
-      5.161.129.94
-  192.42.93.30
-  inet_pton(AF_INET, "192.168.100.1", &(address.sin_addr));
-*/
 }
