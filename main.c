@@ -42,12 +42,13 @@ int main() {
 
   printf("Date and time successfully stored in .bible_cache\n");
 
-  // Networking:
-  // int getaddrinfo(
-  //    const char *node,    // e.g. "https://bible-api.com/ or IP address"
-  //    const char *service, // e.g. "http" or port number
-  //    const struct addrinfo *hints, struct addrinfo **res);
-
+  /*
+   Networking:
+  int getaddrinfo(
+      const char *node,    // e.g. "https://bible-api.com/ or IP address"
+      const char *service, // e.g. "http" or port number
+      const struct addrinfo *hints, struct addrinfo **res);
+ */
   int status;
   struct addrinfo hints, *res, *p;
   char ipstr[INET6_ADDRSTRLEN];
