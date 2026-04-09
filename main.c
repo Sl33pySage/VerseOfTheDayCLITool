@@ -77,7 +77,6 @@ int main() {
   }
   freeaddrinfo(res);
   return 0;
-
   /*
  int getaddrinfo(const char *node,    // e.g., "www.example.com" or IP Address
                  const char *service, // e.g., "http" or port number "80"
@@ -98,8 +97,6 @@ int main() {
   1. Create a socket
   int socket(int domain, int type, int protocol);
   struct sockaddr_in address;
-
-
   IPv4: showip result off bible-api.com:
       5.161.129.94
   192.42.93.30
