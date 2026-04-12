@@ -76,6 +76,9 @@ int main() {
     inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
     printf(" %s: %s\n", ipver, ipstr);
   }
+
+  s = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+
   freeaddrinfo(res);
   return 0;
 }
