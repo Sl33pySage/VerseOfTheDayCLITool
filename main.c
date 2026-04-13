@@ -51,6 +51,7 @@ int main() {
  */
   int status;
   struct addrinfo hints, *res, *p;
+  int sockfd;
   char ipstr[INET6_ADDRSTRLEN];
 
   memset(&hints, 0, sizeof hints);
@@ -77,7 +78,16 @@ int main() {
     printf(" %s: %s\n", ipver, ipstr);
   }
 
-  s = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+  sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+
+  // bind to socket?
+  bind(sockfd, res->ai_addr, res->ai_addrlen);
+
+  int yes = 1;
+  // char yes='1'; Solaris people use this
+
+  // lose the pesky "Address already in use" error message
+  // setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
 
   freeaddrinfo(res);
   return 0;
