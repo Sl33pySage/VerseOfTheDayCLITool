@@ -79,6 +79,9 @@ int main() {
   }
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+  if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
+    printf("Connected!");
+  };
 
   int yes = 1;
   // char yes='1'; Solaris people use this
