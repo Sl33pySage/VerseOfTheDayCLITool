@@ -79,15 +79,32 @@ int main() {
   }
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
-
-  // bind to socket?
-  bind(sockfd, res->ai_addr, res->ai_addrlen);
+  if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
+    printf("Connected!");
+  };
 
   int yes = 1;
   // char yes='1'; Solaris people use this
 
   // lose the pesky "Address already in use" error message
   // setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
+
+  /*
+   * 5.4 connect() implementation
+   * int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
+   * first, load up address structs with getaddrinfo():
+   * memset(&hints, 0, sizeof hints);
+   * hints.ai_family = AF_UNSPEC;
+   * hints.ai_socktype = SOCK_STREAM;
+   *
+   * getaddrinfo("www.example.com", "3490", &hints, &res);
+   *
+   * make a socket:
+   * sockfd = socket(res->ai_family, res->ai_socktype, res->ai_addr);
+   *
+   * connect!
+   * connect(sockfd, res->addr, res->ai_addrlen);
+   */
 
   freeaddrinfo(res);
   return 0;
