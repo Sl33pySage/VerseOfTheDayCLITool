@@ -80,11 +80,18 @@ int main() {
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
-    printf("Connected!");
+    char *msg = "GET";
+    int len, bytes_sent;
+
+    len = strlen(msg);
+    bytes_sent = send(sockfd, msg, len, 0);
+    printf("Connected!\n");
   };
 
-  int yes = 1;
-  // char yes='1'; Solaris people use this
+  close(sockfd);
+
+  // int yes = 1;
+  //  char yes='1'; Solaris people use this
 
   // lose the pesky "Address already in use" error message
   // setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
