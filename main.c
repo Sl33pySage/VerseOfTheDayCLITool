@@ -53,7 +53,7 @@ int main() {
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
 
-  if ((status = getaddrinfo("bible-api.com", "80", &hints, &res)) != 0) {
+  if ((status = getaddrinfo("labs.bible.org", "80", &hints, &res)) != 0) {
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
     return 1;
   };
@@ -75,20 +75,21 @@ int main() {
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
-    char *msg = "GET verse?random=verse HTTP/1.1";
+    char *msg = "GET /api/?passage=random&type=text HTTP/1.1";
     int len, bytes_sent;
 
     len = strlen(msg);
     bytes_sent = send(sockfd, msg, len, 0);
     printf("Connected!\n");
-    printf("bytes_sent: %c\n", bytes_sent);
+    printf("msg: %s\n", msg);
+    printf("bytes_sent: %d\n", bytes_sent);
   };
 
   char buf[2048];
   int n;
   while ((n = recv(sockfd, buf, sizeof buf - 1, 0)) > 0) {
     buf[n] = '\0';
-    printf("%s", buf);
+    printf("buf: %s\n", buf);
   }
   close(sockfd);
 
