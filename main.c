@@ -42,13 +42,8 @@ int main() {
 
   printf("Date and time successfully stored in .bible_cache\n");
 
-  /*
-   Networking:
-  int getaddrinfo(
-      const char *node,    // e.g. "https://bible-api.com/ or IP address"
-      const char *service, // e.g. "http" or port number
-      const struct addrinfo *hints, struct addrinfo **res);
- */
+  // Networking:
+
   int status;
   struct addrinfo hints, *res, *p;
   int sockfd;
@@ -80,38 +75,22 @@ int main() {
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
-    char *msg = "GET";
+    char *msg = "GET verse?random=verse HTTP/1.1";
     int len, bytes_sent;
 
     len = strlen(msg);
     bytes_sent = send(sockfd, msg, len, 0);
     printf("Connected!\n");
+    printf("bytes_sent: %c\n", bytes_sent);
   };
 
+  char buf[2048];
+  int n;
+  while ((n = recv(sockfd, buf, sizeof buf - 1, 0)) > 0) {
+    buf[n] = '\0';
+    printf("%s", buf);
+  }
   close(sockfd);
-
-  // int yes = 1;
-  //  char yes='1'; Solaris people use this
-
-  // lose the pesky "Address already in use" error message
-  // setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
-
-  /*
-   * 5.4 connect() implementation
-   * int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
-   * first, load up address structs with getaddrinfo():
-   * memset(&hints, 0, sizeof hints);
-   * hints.ai_family = AF_UNSPEC;
-   * hints.ai_socktype = SOCK_STREAM;
-   *
-   * getaddrinfo("www.example.com", "3490", &hints, &res);
-   *
-   * make a socket:
-   * sockfd = socket(res->ai_family, res->ai_socktype, res->ai_addr);
-   *
-   * connect!
-   * connect(sockfd, res->addr, res->ai_addrlen);
-   */
 
   freeaddrinfo(res);
   return 0;
