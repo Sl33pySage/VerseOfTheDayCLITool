@@ -75,14 +75,15 @@ int main() {
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
-    char *msg = "GET /api/?passage=random&type=text HTTP/1.1";
+    char *msg =
+        "GET http://labs.bible.org/api/?passage=random&type=text HTTP/1.1";
     int len, bytes_sent;
 
     len = strlen(msg);
     bytes_sent = send(sockfd, msg, len, 0);
     printf("Connected!\n");
     printf("msg: %s\n", msg);
-    printf("bytes_sent: %d\n", bytes_sent);
+    printf("bytes_sent: %p\n", &bytes_sent);
   };
 
   char buf[2048];
