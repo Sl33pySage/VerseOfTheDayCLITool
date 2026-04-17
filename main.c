@@ -43,7 +43,6 @@ int main() {
   printf("Date and time successfully stored in .bible_cache\n");
 
   // Networking:
-
   int status;
   struct addrinfo hints, *res, *p;
   int sockfd;
@@ -70,20 +69,20 @@ int main() {
 
     // Convert the IP to a string and print
     inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
-    printf(" %s: %s\n", ipver, ipstr);
+    printf("ipver: %s\n ipstr: %s\n", ipver, ipstr);
   }
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
-    char *msg =
-        "GET http://labs.bible.org/api/?passage=random&type=text HTTP/1.1";
+    char *msg = "GET HTTP/1.1 Host: "
+                "http://labs.bible.org/api/?passage=random&type=text";
     int len, bytes_sent;
 
     len = strlen(msg);
     bytes_sent = send(sockfd, msg, len, 0);
     printf("Connected!\n");
     printf("msg: %s\n", msg);
-    printf("bytes_sent: %p\n", &bytes_sent);
+    printf("bytes_sent: %d\n", bytes_sent);
   };
 
   char buf[2048];
