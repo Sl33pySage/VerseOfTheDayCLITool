@@ -86,7 +86,10 @@ int main() {
 
     len = strlen(msg);
     bytes_sent = send(sockfd, msg, len, 0);
-    //    strtol(&bytes_sent, );
+    // strtol(&msg, &bytes_sent, sizeof len);
+    // void parse_url(char *url, char**hostname, char **port, char**, path) {
+    // printf("URL: %s\n", url);
+    // }
     printf("Connected!\n");
     printf("msg: %s\n", msg);
     printf("bytes_sent: %d\n", bytes_sent);
