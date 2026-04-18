@@ -74,17 +74,23 @@ int main() {
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
-    char *msg = "GET HTTP/1.1 Host: "
-                "http://labs.bible.org/api/?passage=random&type=text";
+    char *msg =
+        "GET /api/?passage=random&type=text HTTP/1.1\r\nUser-Agent: "
+        "Mozilla/5.0 "
+        "(Windows NT 10.0; Win64; x64) AppleWebKit/537.36\r\nAccept-Language: "
+        "en-US\r\nAccept: "
+        "text/html,application/xtml+xml,application/xml;q=0.9,*/"
+        "*;q=0.8\r\nAccept-Encoding: gzip,deflate\r\nHost: "
+        "labs.bible.org\r\nConnection: Keep-Alive\r\n";
     int len, bytes_sent;
 
     len = strlen(msg);
     bytes_sent = send(sockfd, msg, len, 0);
+    //    strtol(&bytes_sent, );
     printf("Connected!\n");
     printf("msg: %s\n", msg);
     printf("bytes_sent: %d\n", bytes_sent);
   };
-
   char buf[2048];
   int n;
   while ((n = recv(sockfd, buf, sizeof buf - 1, 0)) > 0) {
