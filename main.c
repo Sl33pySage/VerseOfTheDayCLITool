@@ -99,6 +99,8 @@ int main() {
   return 0;
 }
 
+// TODO: 1. Watch Low Level Academy Networking Guide
+
 // strtol(&msg, &bytes_sent, sizeof len);
 
 /*  Parsing a URL
