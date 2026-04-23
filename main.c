@@ -91,15 +91,12 @@ int main() {
     printf("msg: %s\n", msg);
     printf("bytes_sent: %d\n", bytes_sent);
     printf("res->ai_addr: %p\n", &res->ai_addr);
-  };
-
+  }
   close(sockfd);
 
   freeaddrinfo(res);
   return 0;
 }
-
-// TODO: 1. Watch Low Level Academy Networking Guide
 
 // strtol(&msg, &bytes_sent, sizeof len);
 
