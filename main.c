@@ -90,9 +90,8 @@ int main() {
     printf("Connected!\n");
     printf("msg: %s\n", msg);
     printf("bytes_sent: %d\n", bytes_sent);
-    // printf("res->ai_addr: %p\n", &res->ai_addr);
-  };
-
+    printf("res->ai_addr: %p\n", &res->ai_addr);
+  }
   close(sockfd);
 
   freeaddrinfo(res);
