@@ -68,29 +68,27 @@ int main() {
     }
 
     // Convert the IP to a string and print
-    inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
-    printf("ipver: %s\n ipstr: %s\n", ipver, ipstr);
+    // inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
+    // printf("ipver: %s\n ipstr: %s\n", ipver, ipstr);
   }
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
-    char *msg =
-        "GET /api/?passage=random&type=text HTTP/1.1\r\nUser-Agent: "
-        "Mozilla/5.0 "
-        "(Windows NT 10.0; Win64; x64) AppleWebKit/537.36\r\nAccept-Language: "
-        "en-US\r\nAccept: "
-        "text/html,application/xtml+xml,application/xml;q=0.9,*/"
-        "*;q=0.8\r\nAccept-Encoding: gzip,deflate\r\nHost: "
-        "labs.bible.org\r\nConnection: Keep-Alive\r\n";
+    char *msg = "GET /api/?passage=random&type=text HTTP/1.1\r\n\r\n";
     int len, bytes_sent;
 
     len = strlen(msg);
     bytes_sent = send(sockfd, msg, len, 0);
 
-    printf("Connected!\n");
-    printf("msg: %s\n", msg);
-    // printf("bytes_sent: %d\n", bytes_sent);
-    //    printf("res->ai_addr: %p\n", (struct sockaddr_in *)&res->ai_addr);
+    if (bytes_sent == -1) {
+      perror("ERROR SENDING...");
+      return -1;
+    } else {
+      printf("Connected!\n");
+      printf("%s\n", msg);
+      printf("%d\n", bytes_sent);
+      // printf("res->ai_addr: %p\n", (struct sockaddr_in *)&res->ai_addr);
+    }
   }
   close(sockfd);
 
