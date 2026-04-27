@@ -86,6 +86,10 @@ int main() {
       printf("%s\n", msg);
       printf("%d\n", bytes_sent);
       // printf("res->ai_addr: %p\n", (struct sockaddr_in *)&res->ai_addr);
+
+      /* recieve the response */
+      char message[1024], response[4096];
+      memset(response, 0, sizeof(response));
     }
   }
 
