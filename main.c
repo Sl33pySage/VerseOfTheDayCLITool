@@ -66,7 +66,6 @@ int main() {
       addr = &(ipv4->sin_addr);
       ipver = "IPv4";
     }
-
     // Convert the IP to a string and print
     // inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
     // printf("ipver: %s\n ipstr: %s\n", ipver, ipstr);
@@ -76,7 +75,6 @@ int main() {
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
     char *msg = "GET /api/?passage=random&type=text HTTP/1.1\r\n\r\n";
     int len, bytes_sent;
-
     len = strlen(msg);
     bytes_sent = send(sockfd, msg, len, 0);
 
@@ -90,8 +88,8 @@ int main() {
       // printf("res->ai_addr: %p\n", (struct sockaddr_in *)&res->ai_addr);
     }
   }
-  close(sockfd);
 
+  close(sockfd);
   freeaddrinfo(res);
   return 0;
 }
