@@ -89,7 +89,10 @@ int main() {
 
       /* recieve the response */
       char message[1024], response[4096];
+      int recieved, total;
       memset(response, 0, sizeof(response));
+      total = sizeof(response) - 1;
+      recieved = 0;
     }
   }
 
