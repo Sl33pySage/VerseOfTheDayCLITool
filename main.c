@@ -76,8 +76,9 @@ int main() {
     char *msg = "GET /api/?passage=random&type=text HTTP/1.1\r\n\r\n";
     int len, bytes_sent;
     len = strlen(msg);
-    bytes_sent = send(sockfd, msg, len, 0);
 
+    /* Send Data (request) */
+    bytes_sent = send(sockfd, msg, len, 0);
     if (bytes_sent == -1) {
       perror("ERROR SENDING...");
       return -1;
