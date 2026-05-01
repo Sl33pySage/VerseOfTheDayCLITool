@@ -4,6 +4,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 // #include <stdlib.h>
+#include <curl/curl.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -66,12 +67,10 @@ int main() {
       addr = &(ipv4->sin_addr);
       ipver = "IPv4";
     }
-    // Convert the IP to a string and print
-    // inet_ntop(p->ai_family, addr, ipstr, sizeof ipstr);
-    // printf("ipver: %s\n ipstr: %s\n", ipver, ipstr);
   }
 
   sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+  printf("Connecting...\n");
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
     char *msg = "GET /api/?passage=random&type=text HTTP/1.1\r\n\r\n";
     int len, bytes_sent;
@@ -94,6 +93,29 @@ int main() {
       memset(response, 0, sizeof(response));
       total = sizeof(response) - 1;
       recieved = 0;
+
+      int bytes_recieved = recv(sockfd, response, 4096, 0);
+      if (bytes_recieved < 1) {
+        printf("Connection closed by peer.\n");
+      }
+      // printf("Recieved (%d bytes): %.*s", bytes_recieved, bytes_recieved,
+      //       response);
+
+      // Libcurl Stuff
+      curl_global_init(CURL_GLOBAL_ALL);
+      CURL *handle = curl_easy_init();
+      if (handle) {
+        CURLcode result;
+        curl_easy_setopt(handle, CURLOPT_URL, "https://api.ipify.org/");
+        result = curl_easy_perform(handle);
+        curl_easy_cleanup(handle);
+      }
+
+      // Has stdin input? -> Yes -> fgets(stdin) -> send() -> has socket()
+      // input? -> yes -> recv() -> Socket closed by peer? -> yes -> close() Has
+      // stdin input? -> No -> Has socket() input? -> No -> Connect() - Has
+      // stdin input? Has socket() input? -> Yes -> recv() -> Socket closed by
+      // peer? -> printf() -> connect() - Has stdin input?
     }
   }
 
