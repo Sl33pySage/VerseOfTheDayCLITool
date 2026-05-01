@@ -2,6 +2,7 @@
 #include <err.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <stddef.h>
 #include <stdio.h>
 // #include <stdlib.h>
 #include <curl/curl.h>
@@ -106,7 +107,8 @@ int main() {
       CURL *handle = curl_easy_init();
       if (handle) {
         CURLcode result;
-        curl_easy_setopt(handle, CURLOPT_URL, "https://api.ipify.org/");
+        curl_easy_setopt(handle, CURLOPT_URL,
+                         "https://bible-api.com/data/kjv/random");
         result = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
       }
