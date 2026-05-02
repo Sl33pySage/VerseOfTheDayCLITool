@@ -1,3 +1,5 @@
+#include "cJSON.c"
+#include "cJSON.h"
 #include <arpa/inet.h>
 #include <err.h>
 #include <netdb.h>
@@ -12,7 +14,9 @@
 #include <time.h>
 #include <unistd.h>
 
-int main() {
+// State Machine Function
+void state_machine() {
+
   FILE *fptr;
   char buffer[80];
   time_t raw_time;
@@ -33,7 +37,7 @@ int main() {
   fptr = fopen(".bible_cache", "w");
   if (fptr == NULL) {
     printf("Error opening file!\n");
-    return 1;
+    return;
   }
 
   // 5. Write the formatted string to the file
@@ -43,6 +47,10 @@ int main() {
   fclose(fptr);
 
   printf("Date and time successfully stored in .bible_cache\n");
+}
+
+int main() {
+  state_machine();
 
   // Networking:
   int status;
@@ -99,25 +107,32 @@ int main() {
       if (bytes_recieved < 1) {
         printf("Connection closed by peer.\n");
       }
-      // printf("Recieved (%d bytes): %.*s", bytes_recieved, bytes_recieved,
-      //       response);
 
       // Libcurl Stuff
       curl_global_init(CURL_GLOBAL_ALL);
       CURL *handle = curl_easy_init();
       if (handle) {
+
+        // cJSON structure:
+        typedef struct cJSON {
+          struct cJSON *next;
+          struct cJSON *prev;
+          struct cJSON *child;
+          int type;
+          char *valuestring;
+          // writing valueint is DEPRECATED, use
+          // CJSON_SetNumberValue instead
+          int valueint;
+          double valuedouble;
+          char *string;
+        } cJSON;
+
         CURLcode result;
         curl_easy_setopt(handle, CURLOPT_URL,
                          "https://bible-api.com/data/kjv/random");
         result = curl_easy_perform(handle);
         curl_easy_cleanup(handle);
       }
-
-      // Has stdin input? -> Yes -> fgets(stdin) -> send() -> has socket()
-      // input? -> yes -> recv() -> Socket closed by peer? -> yes -> close() Has
-      // stdin input? -> No -> Has socket() input? -> No -> Connect() - Has
-      // stdin input? Has socket() input? -> Yes -> recv() -> Socket closed by
-      // peer? -> printf() -> connect() - Has stdin input?
     }
   }
 
