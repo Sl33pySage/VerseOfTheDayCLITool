@@ -14,7 +14,9 @@
 #include <time.h>
 #include <unistd.h>
 
-int main() {
+// State Machine Function
+void state_machine() {
+
   FILE *fptr;
   char buffer[80];
   time_t raw_time;
@@ -35,7 +37,7 @@ int main() {
   fptr = fopen(".bible_cache", "w");
   if (fptr == NULL) {
     printf("Error opening file!\n");
-    return 1;
+    return;
   }
 
   // 5. Write the formatted string to the file
@@ -45,6 +47,10 @@ int main() {
   fclose(fptr);
 
   printf("Date and time successfully stored in .bible_cache\n");
+}
+
+int main() {
+  state_machine();
 
   // Networking:
   int status;
