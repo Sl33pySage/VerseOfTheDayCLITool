@@ -127,6 +127,16 @@ int main() {
           char *string;
         } cJSON;
 
+        /*
+        size_t write_callback(char *ptr, size_t size, size_t nmemb,
+                              void *userdata);
+        CURLcode result;
+        result =
+            curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, write_callback);
+
+        printf("result: %u", result);
+        */
+
         CURLcode result;
         curl_easy_setopt(handle, CURLOPT_URL,
                          "https://bible-api.com/data/kjv/random");
