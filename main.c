@@ -16,7 +16,6 @@
 
 // State Machine Function
 void state_machine() {
-
   FILE *fptr;
   char buffer[80];
   time_t raw_time;
@@ -29,8 +28,7 @@ void state_machine() {
   // 2. Convert to local time
   time_info = localtime(&raw_time);
 
-  // 3. Format the time into a string
-  // refer to strftime documentation
+  // 3. Format the time into a string, refer to strftime documentation
   strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", time_info);
 
   // 4. Open file for writing ("w" overwrites, "a" appends)
@@ -45,8 +43,41 @@ void state_machine() {
 
   // 6. Close the file
   fclose(fptr);
-
   printf("Date and time successfully stored in .bible_cache\n");
+}
+
+// WRITE_FUNCTION for the write_callback
+char *write_data_fn(void) {
+
+  cJSON *identifier = NULL;
+  cJSON *translation = NULL;
+  cJSON *name = NULL;
+  cJSON *language = NULL;
+  cJSON *random_verse = NULL;
+  cJSON *book_id = NULL;
+  cJSON *book = NULL;
+  cJSON *chapter = NULL;
+  cJSON *verse = NULL;
+  char *text = NULL;
+  size_t index = 0;
+
+  cJSON *bible = cJSON_CreateObject();
+  if (bible == NULL) {
+    goto end;
+  }
+
+  name = cJSON_CreateString("King James Version");
+  if (name == NULL) {
+    goto end;
+  }
+  cJSON_AddItemToObject(bible, "name", name);
+  text = cJSON_Print(bible);
+  if (text == NULL) {
+    fprintf(stderr, "Failed to print bible!\n");
+  }
+end:
+  cJSON_Delete(bible);
+  return text;
 }
 
 int main() {
@@ -108,35 +139,11 @@ int main() {
         printf("Connection closed by peer.\n");
       }
 
+      write_data_fn();
       // Libcurl Stuff
       curl_global_init(CURL_GLOBAL_ALL);
       CURL *handle = curl_easy_init();
       if (handle) {
-
-        // cJSON structure:
-        typedef struct cJSON {
-          struct cJSON *next;
-          struct cJSON *prev;
-          struct cJSON *child;
-          int type;
-          char *valuestring;
-          // writing valueint is DEPRECATED, use
-          // CJSON_SetNumberValue instead
-          int valueint;
-          double valuedouble;
-          char *string;
-        } cJSON;
-
-        /*
-        size_t write_callback(char *ptr, size_t size, size_t nmemb,
-                              void *userdata);
-        CURLcode result;
-        result =
-            curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, write_callback);
-
-        printf("result: %u", result);
-        */
-
         CURLcode result;
         curl_easy_setopt(handle, CURLOPT_URL,
                          "https://bible-api.com/data/kjv/random");
