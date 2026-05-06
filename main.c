@@ -139,7 +139,6 @@ int main() {
         printf("Connection closed by peer.\n");
       }
 
-      write_data_fn();
       // Libcurl Stuff
       curl_global_init(CURL_GLOBAL_ALL);
       CURL *handle = curl_easy_init();
@@ -148,6 +147,8 @@ int main() {
         curl_easy_setopt(handle, CURLOPT_URL,
                          "https://bible-api.com/data/kjv/random");
         result = curl_easy_perform(handle);
+        char *done = write_data_fn();
+        printf("done: %s", done);
         curl_easy_cleanup(handle);
       }
     }
