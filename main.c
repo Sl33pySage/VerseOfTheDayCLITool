@@ -139,6 +139,7 @@ int main() {
         printf("Connection closed by peer.\n");
       }
 
+      write_data_fn();
       // Libcurl Stuff
       curl_global_init(CURL_GLOBAL_ALL);
       CURL *handle = curl_easy_init();
