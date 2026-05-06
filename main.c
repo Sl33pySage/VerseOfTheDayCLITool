@@ -80,6 +80,33 @@ end:
   return text;
 }
 
+// Parse function?
+int parse_dis_buf(const char *const bible) {
+  const cJSON *text = NULL;
+  const cJSON *book = NULL;
+  const cJSON *verse = NULL;
+  const cJSON *chapter = NULL;
+  int status = 0;
+  cJSON *bible_json = cJSON_Parse(bible);
+  if (bible_json == NULL) {
+    const char *error_ptr = cJSON_GetErrorPtr();
+    if (error_ptr != NULL) {
+      fprintf(stderr, "Error before: %s\n", error_ptr);
+    }
+    status = 0;
+    goto end;
+  }
+
+  // Get the text of the random verse
+  text = cJSON_GetObjectItemCaseSensitive(bible_json, "name");
+  if (cJSON_IsString(text) && (text->valuestring != NULL)) {
+    printf("Checking monitor \"%s\"\n", text->valuestring);
+  }
+end:
+  cJSON_Delete(bible_json);
+  return status;
+}
+
 int main() {
   state_machine();
 
@@ -139,7 +166,6 @@ int main() {
         printf("Connection closed by peer.\n");
       }
 
-      write_data_fn();
       // Libcurl Stuff
       curl_global_init(CURL_GLOBAL_ALL);
       CURL *handle = curl_easy_init();
@@ -148,8 +174,11 @@ int main() {
         curl_easy_setopt(handle, CURLOPT_URL,
                          "https://bible-api.com/data/kjv/random");
         result = curl_easy_perform(handle);
+
         char *done = write_data_fn();
-        printf("done: %s", done);
+        printf("done: %s\n", done);
+        int parsed = parse_dis_buf(done);
+        printf("Parsed: %d\n", parsed);
         curl_easy_cleanup(handle);
       }
     }
