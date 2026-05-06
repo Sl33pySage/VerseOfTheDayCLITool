@@ -148,6 +148,8 @@ int main() {
         curl_easy_setopt(handle, CURLOPT_URL,
                          "https://bible-api.com/data/kjv/random");
         result = curl_easy_perform(handle);
+        char *done = write_data_fn();
+        printf("done: %s", done);
         curl_easy_cleanup(handle);
       }
     }
