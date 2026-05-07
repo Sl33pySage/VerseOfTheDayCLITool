@@ -91,6 +91,7 @@ int parse_dis_buf(const char *const bible) {
   const cJSON *chapter = NULL;
   int status = 0;
   cJSON *bible_json = cJSON_Parse(bible);
+  printf("%s", (const char *)bible_json);
   if (bible_json == NULL) {
     const char *error_ptr = cJSON_GetErrorPtr();
     if (error_ptr != NULL) {
@@ -178,6 +179,7 @@ int main() {
                          "https://bible-api.com/data/kjv/random");
         result = curl_easy_perform(handle);
 
+        parse_dis_buf((const char *)result);
         // char *done = write_data_fn();
         // printf("done: %s\n", done);
         // int parsed = parse_dis_buf(done);
