@@ -66,10 +66,13 @@ char *write_data_fn(void) {
     goto end;
   }
 
+  /*
   name = cJSON_CreateString("King James Version");
   if (name == NULL) {
     goto end;
   }
+  */
+
   cJSON_AddItemToObject(bible, "name", name);
   text = cJSON_Print(bible);
   if (text == NULL) {
@@ -175,10 +178,10 @@ int main() {
                          "https://bible-api.com/data/kjv/random");
         result = curl_easy_perform(handle);
 
-        char *done = write_data_fn();
-        printf("done: %s\n", done);
-        int parsed = parse_dis_buf(done);
-        printf("Parsed: %d\n", parsed);
+        // char *done = write_data_fn();
+        // printf("done: %s\n", done);
+        // int parsed = parse_dis_buf(done);
+        // printf("Parsed: %d\n", parsed);
         curl_easy_cleanup(handle);
       }
     }
