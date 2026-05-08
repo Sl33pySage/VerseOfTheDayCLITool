@@ -1,13 +1,13 @@
 #include "cJSON.c"
 #include "cJSON.h"
 #include <arpa/inet.h>
+#include <curl/curl.h>
 #include <err.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stddef.h>
 #include <stdio.h>
-// #include <stdlib.h>
-#include <curl/curl.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -46,82 +46,65 @@ void state_machine() {
   printf("Date and time successfully stored in .bible_cache\n");
 }
 
-int main() {
+void lib_curl_func() {
+  // Libcurl Stuff
+  curl_global_init(CURL_GLOBAL_ALL);
+  CURL *handle = curl_easy_init();
+  if (handle) {
+    CURLcode result;
+    curl_easy_setopt(handle, CURLOPT_URL,
+                     "https://bible-api.com/data/kjv/random");
+    result = curl_easy_perform(handle);
+    curl_easy_cleanup(handle);
+  }
+}
+
+struct memory {
+  char *response;
+  size_t size;
+};
+
+static size_t cb(char *data, size_t size, size_t nmemb, void *clientp) {
+  size_t realsize = nmemb;
+  struct memory *mem = (struct memory *)clientp;
+
+  char *ptr = realloc(mem->response, mem->size + realsize + 1);
+  if (!ptr) {
+    return 0; // Out of memory.
+  }
+
+  mem->response = ptr;
+  memcpy(&(mem->response[mem->size]), data, realsize);
+  mem->size += realsize;
+  mem->response[mem->size] = 0;
+  return realsize;
+}
+
+int main(void) {
+  struct memory chunk = {0};
+  CURLcode result;
+  CURL *curl = curl_easy_init();
+  if (curl) {
+
+    // Getting the url
+    curl_easy_setopt(curl, CURLOPT_URL,
+                     "https://bible-api.com/data/kjv/random");
+
+    // Send all data to this function
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, cb);
+
+    // We pass our 'chunk' struct to the callback function
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+
+    // Send a request
+    result = curl_easy_perform(curl);
+
+    printf("result: %s\n", chunk.response);
+
+    // Remember to free the buffer
+    free(chunk.response);
+    curl_easy_cleanup(curl);
+  }
   state_machine();
-
-  // Networking:
-  int status;
-  struct addrinfo hints, *res, *p;
-  int sockfd;
-  char ipstr[INET6_ADDRSTRLEN];
-
-  memset(&hints, 0, sizeof hints);
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_STREAM;
-
-  if ((status = getaddrinfo("labs.bible.org", "80", &hints, &res)) != 0) {
-    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
-    return 1;
-  };
-
-  for (p = res; p != NULL; p = p->ai_next) {
-    void *addr;
-    char *ipver;
-    // Extract IP based on address family
-    if (p->ai_family == AF_INET) { // IPv4
-      struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
-      addr = &(ipv4->sin_addr);
-      ipver = "IPv4";
-    }
-  }
-
-  sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
-  printf("Connecting...\n");
-  if (connect(sockfd, res->ai_addr, res->ai_addrlen) != -1) {
-    char *msg = "GET /api/?passage=random&type=text HTTP/1.1\r\n\r\n";
-    int len, bytes_sent;
-    len = strlen(msg);
-
-    /* Send Data (request) */
-    bytes_sent = send(sockfd, msg, len, 0);
-    if (bytes_sent == -1) {
-      perror("ERROR SENDING...");
-      return -1;
-    } else {
-      printf("Connected!\n");
-      printf("msg: %s\n", msg);
-      printf("bytes_sent: %d\n", bytes_sent);
-      // printf("res->ai_addr: %p\n", (struct sockaddr_in *)&res->ai_addr);
-
-      /* recieve the response */
-      char message[1024], response[4096];
-      int recieved, total;
-      memset(response, 0, sizeof(response));
-      total = sizeof(response) - 1;
-      recieved = 0;
-
-      int bytes_recieved = recv(sockfd, response, 4096, 0);
-      if (bytes_recieved < 1) {
-        printf("Connection closed by peer.\n");
-      }
-
-      printf("bytes_recieved: %d\n", bytes_recieved);
-
-      // Libcurl Stuff
-      curl_global_init(CURL_GLOBAL_ALL);
-      CURL *handle = curl_easy_init();
-      if (handle) {
-        CURLcode result;
-        curl_easy_setopt(handle, CURLOPT_URL,
-                         "https://bible-api.com/data/kjv/random");
-        result = curl_easy_perform(handle);
-
-        curl_easy_cleanup(handle);
-      }
-    }
-  }
-
-  close(sockfd);
-  freeaddrinfo(res);
-  return 0;
+  // lib_curl_func();
 }
