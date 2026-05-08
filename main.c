@@ -46,71 +46,6 @@ void state_machine() {
   printf("Date and time successfully stored in .bible_cache\n");
 }
 
-// WRITE_FUNCTION for the write_callback
-char *write_data_fn(void) {
-
-  cJSON *identifier = NULL;
-  cJSON *translation = NULL;
-  cJSON *name = NULL;
-  cJSON *language = NULL;
-  cJSON *random_verse = NULL;
-  cJSON *book_id = NULL;
-  cJSON *book = NULL;
-  cJSON *chapter = NULL;
-  cJSON *verse = NULL;
-  char *text = NULL;
-  size_t index = 0;
-
-  cJSON *bible = cJSON_CreateObject();
-  if (bible == NULL) {
-    goto end;
-  }
-
-  /*
-  name = cJSON_CreateString("King James Version");
-  if (name == NULL) {
-    goto end;
-  }
-  */
-
-  cJSON_AddItemToObject(bible, "name", name);
-  text = cJSON_Print(bible);
-  if (text == NULL) {
-    fprintf(stderr, "Failed to print bible!\n");
-  }
-end:
-  cJSON_Delete(bible);
-  return text;
-}
-
-// Parse function?
-int parse_dis_buf(const char *const bible) {
-  const cJSON *text = NULL;
-  const cJSON *book = NULL;
-  const cJSON *verse = NULL;
-  const cJSON *chapter = NULL;
-  int status = 0;
-  cJSON *bible_json = cJSON_Parse(bible);
-  printf("%s", (const char *)bible_json);
-  if (bible_json == NULL) {
-    const char *error_ptr = cJSON_GetErrorPtr();
-    if (error_ptr != NULL) {
-      fprintf(stderr, "Error before: %s\n", error_ptr);
-    }
-    status = 0;
-    goto end;
-  }
-
-  // Get the text of the random verse
-  text = cJSON_GetObjectItemCaseSensitive(bible_json, "name");
-  if (cJSON_IsString(text) && (text->valuestring != NULL)) {
-    printf("Checking monitor \"%s\"\n", text->valuestring);
-  }
-end:
-  cJSON_Delete(bible_json);
-  return status;
-}
-
 int main() {
   state_machine();
 
@@ -154,8 +89,8 @@ int main() {
       return -1;
     } else {
       printf("Connected!\n");
-      printf("%s\n", msg);
-      printf("%d\n", bytes_sent);
+      printf("msg: %s\n", msg);
+      printf("bytes_sent: %d\n", bytes_sent);
       // printf("res->ai_addr: %p\n", (struct sockaddr_in *)&res->ai_addr);
 
       /* recieve the response */
@@ -170,6 +105,8 @@ int main() {
         printf("Connection closed by peer.\n");
       }
 
+      printf("bytes_recieved: %d\n", bytes_recieved);
+
       // Libcurl Stuff
       curl_global_init(CURL_GLOBAL_ALL);
       CURL *handle = curl_easy_init();
@@ -179,11 +116,6 @@ int main() {
                          "https://bible-api.com/data/kjv/random");
         result = curl_easy_perform(handle);
 
-        parse_dis_buf((const char *)result);
-        // char *done = write_data_fn();
-        // printf("done: %s\n", done);
-        // int parsed = parse_dis_buf(done);
-        // printf("Parsed: %d\n", parsed);
         curl_easy_cleanup(handle);
       }
     }
