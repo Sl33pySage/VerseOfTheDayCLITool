@@ -100,11 +100,17 @@ int main(void) {
     result = curl_easy_perform(curl);
 
     cJSON *jsond = cJSON_Parse(chunk.response);
-    // cJSON_AddObjectToObject(jsond, (const char *)chunk.response);
-    cJSON *text = cJSON_GetObjectItemCaseSensitive(jsond, "text");
+    cJSON *random_verse =
+        cJSON_GetObjectItemCaseSensitive(jsond->child, "random_verse");
 
-    const char *string = cJSON_Print(jsond);
-    printf("string: %s\n", string);
+    const char *Bible_Data = cJSON_Print(jsond);
+    printf("Bible_Data: %s\n", Bible_Data);
+
+    const char *translation_data = cJSON_Print(jsond->child);
+    printf("translation_data: %s\n", translation_data);
+
+    const char *random_verse_data = cJSON_Print(jsond->child->next);
+    printf("random_verse_data: %s\n", random_verse_data);
 
     // Remember to free the buffer
     free(chunk.response);
