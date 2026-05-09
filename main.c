@@ -99,7 +99,10 @@ int main(void) {
     // Send a request
     result = curl_easy_perform(curl);
 
-    printf("result: %s\n", chunk.response);
+    cJSON *jsond = cJSON_CreateObject();
+    cJSON_AddObjectToObject(jsond, (const char *)chunk.response);
+    const char *string = cJSON_Print(jsond);
+    printf("string: %s\n", string);
 
     // Remember to free the buffer
     free(chunk.response);
