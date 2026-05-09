@@ -99,8 +99,10 @@ int main(void) {
     // Send a request
     result = curl_easy_perform(curl);
 
-    cJSON *jsond = cJSON_CreateObject();
-    cJSON_AddObjectToObject(jsond, (const char *)chunk.response);
+    cJSON *jsond = cJSON_Parse(chunk.response);
+    // cJSON_AddObjectToObject(jsond, (const char *)chunk.response);
+    cJSON *text = cJSON_GetObjectItemCaseSensitive(jsond, "text");
+
     const char *string = cJSON_Print(jsond);
     printf("string: %s\n", string);
 
