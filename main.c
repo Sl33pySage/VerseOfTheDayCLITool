@@ -1,6 +1,7 @@
 #include "cJSON.c"
 #include "cJSON.h"
 #include <arpa/inet.h>
+#include <ctype.h>
 #include <curl/curl.h>
 #include <err.h>
 #include <netdb.h>
@@ -80,9 +81,10 @@ static size_t cb(char *data, size_t size, size_t nmemb, void *clientp) {
   return realsize;
 }
 
-int main(void) {
-  struct memory chunk = {0};
-  CURLcode result;
+struct memory chunk = {0};
+CURLcode result;
+
+void api_call() {
   CURL *curl = curl_easy_init();
   if (curl) {
 
@@ -104,18 +106,32 @@ int main(void) {
         cJSON_GetObjectItemCaseSensitive(jsond->child, "random_verse");
 
     const char *Bible_Data = cJSON_Print(jsond);
-    printf("Bible_Data: %s\n", Bible_Data);
+    // printf("Bible_Data: %s\n", Bible_Data);
 
     const char *translation_data = cJSON_Print(jsond->child);
-    printf("translation_data: %s\n", translation_data);
+    // printf("translation_data: %s\n", translation_data);
 
     const char *random_verse_data = cJSON_Print(jsond->child->next);
     printf("random_verse_data: %s\n", random_verse_data);
+
+    cJSON *verse_text =
+        cJSON_GetObjectItemCaseSensitive(jsond->child->next, "text");
+    const char *verse = cJSON_Print(verse_text);
+    printf("%i\n", verse_text->type);
+    printf("verse: %s\n", verse);
+
+    cJSON *string = cJSON_CreateString(verse);
+    const char *s = cJSON_Print(string);
+
+    // fprintf(s, "s: %c");
 
     // Remember to free the buffer
     free(chunk.response);
     curl_easy_cleanup(curl);
   }
+}
+
+int main(void) {
   state_machine();
-  // lib_curl_func();
+  api_call();
 }
