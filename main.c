@@ -117,7 +117,7 @@ void api_call() {
     cJSON *verse_text =
         cJSON_GetObjectItemCaseSensitive(jsond->child->next, "text");
     const char *verse = cJSON_Print(verse_text);
-    printf("%i\n", verse_text->type);
+    printf("verse_text: %s\n", verse_text->valuestring);
     printf("verse: %s\n", verse);
 
     cJSON *string = cJSON_CreateString(verse);
