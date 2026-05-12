@@ -111,7 +111,7 @@ void api_call() {
     // printf("Bible_Data: %s\n", Bible_Data);
 
     const char *translation_data = cJSON_Print(jsond->child);
-    printf("translation_data: %s\n", translation_data);
+    // printf("translation_data: %s\n", translation_data);
 
     // Translation Data Object
     cJSON *Version =
@@ -143,6 +143,17 @@ void api_call() {
 
     printf("%s\n(%s) %s : %s\n%s\n", book, version, chapter_num, num,
            text->valuestring);
+
+    cJSON *string = cJSON_CreateString(verse);
+    const char *s = cJSON_Print(string);
+
+    // fprintf(s, "s: %c");
+
+    cJSON *verse_text =
+        cJSON_GetObjectItemCaseSensitive(jsond->child->next, "text");
+    const char *verse = cJSON_Print(verse_text);
+    printf("verse_text: %s\n", verse_text->valuestring);
+    printf("verse: %s\n", verse);
 
     cJSON *string = cJSON_CreateString(verse);
     const char *s = cJSON_Print(string);
