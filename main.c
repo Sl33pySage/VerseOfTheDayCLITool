@@ -44,7 +44,9 @@ void state_machine() {
 
   // 6. Close the file
   fclose(fptr);
-  printf("Date and time successfully stored in .bible_cache\n");
+  printf("Date and time successfully stored in .bible_cache: 'Last Sucessfully "
+         "Ran: %s'\n",
+         buffer);
 }
 
 void lib_curl_func() {
@@ -111,8 +113,41 @@ void api_call() {
     const char *translation_data = cJSON_Print(jsond->child);
     // printf("translation_data: %s\n", translation_data);
 
+    // Translation Data Object
+    cJSON *Version =
+        cJSON_GetObjectItemCaseSensitive(jsond->child->next, "name");
+    const char *version = cJSON_Print(Version);
+
+    // Random Verse Object Data
     const char *random_verse_data = cJSON_Print(jsond->child->next);
-    printf("random_verse_data: %s\n", random_verse_data);
+    // printf("random_verse_data: %s\n", random_verse_data);
+
+    // Book Name Data
+    cJSON *book_Name =
+        cJSON_GetObjectItemCaseSensitive(jsond->child->next, "book");
+    const char *book = cJSON_Print(book_Name);
+
+    // Chapter Number Data
+    cJSON *chapter_Number =
+        cJSON_GetObjectItemCaseSensitive(jsond->child->next, "chapter");
+    const char *chapter_num = cJSON_Print(chapter_Number);
+
+    // Verse Number Data
+    cJSON *number =
+        cJSON_GetObjectItemCaseSensitive(jsond->child->next, "verse");
+    const char *num = cJSON_Print(number);
+
+    // Verse Text String Data
+    cJSON *text = cJSON_GetObjectItemCaseSensitive(jsond->child->next, "text");
+    const char *verse = cJSON_Print(text);
+
+    printf("%s\n(%s) %s : %s\n%s\n", book, version, chapter_num, num,
+           text->valuestring);
+
+    cJSON *string = cJSON_CreateString(verse);
+    const char *s = cJSON_Print(string);
+
+    // fprintf(s, "s: %c");
 
     cJSON *verse_text =
         cJSON_GetObjectItemCaseSensitive(jsond->child->next, "text");
