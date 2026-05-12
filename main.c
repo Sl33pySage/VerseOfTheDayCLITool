@@ -114,8 +114,7 @@ void api_call() {
     // printf("translation_data: %s\n", translation_data);
 
     // Translation Data Object
-    cJSON *Version =
-        cJSON_GetObjectItemCaseSensitive(jsond->child->next, "name");
+    cJSON *Version = cJSON_GetObjectItemCaseSensitive(jsond->child, "name");
     const char *version = cJSON_Print(Version);
 
     // Random Verse Object Data
@@ -141,19 +140,9 @@ void api_call() {
     cJSON *text = cJSON_GetObjectItemCaseSensitive(jsond->child->next, "text");
     const char *verse = cJSON_Print(text);
 
-    printf("%s\n(%s) %s : %s\n%s\n", book, version, chapter_num, num,
+    // Final Output String
+    printf("%s (%s) %s:%s\n%s\n", book, version, chapter_num, num,
            text->valuestring);
-
-    cJSON *string = cJSON_CreateString(verse);
-    const char *s = cJSON_Print(string);
-
-    // fprintf(s, "s: %c");
-
-    cJSON *verse_text =
-        cJSON_GetObjectItemCaseSensitive(jsond->child->next, "text");
-    const char *verse = cJSON_Print(verse_text);
-    printf("verse_text: %s\n", verse_text->valuestring);
-    printf("verse: %s\n", verse);
 
     cJSON *string = cJSON_CreateString(verse);
     const char *s = cJSON_Print(string);
