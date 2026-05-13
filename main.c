@@ -30,7 +30,7 @@ void state_machine() {
   time_info = localtime(&raw_time);
 
   // 3. Format the time into a string, refer to strftime documentation
-  strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", time_info);
+  strftime(buffer, sizeof(buffer), "%D %r", time_info);
 
   // 4. Open file for writing ("w" overwrites, "a" appends)
   fptr = fopen(".bible_cache", "w");
