@@ -131,8 +131,9 @@ void formatfunc(cJSON *Bible_Data) {
   const char *verse = cJSON_Print(text);
 
   // Final Output String
-  printf("%s (%s) %s:%s\n%s\n", book, version, chapter_num, num,
-         text->valuestring);
+  printf("||  The Book of %s: ||  (%s)  ||  Chapter:  %s  ||  Verse:  %s  ||  "
+         "\n%s",
+         book, version, chapter_num, num, text->valuestring);
 }
 
 void api_call() {
