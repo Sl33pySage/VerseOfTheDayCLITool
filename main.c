@@ -87,7 +87,7 @@ static size_t cb(char *data, size_t size, size_t nmemb, void *clientp) {
 struct memory chunk = {0};
 CURLcode result;
 
-void formatfunc(cJSON *Bible_Data) {
+void verse_of_the_day_func(cJSON *Bible_Data) {
   /*
    * Takes in the json object taken from the API as a argument
    *
@@ -153,7 +153,7 @@ void api_call() {
     // Send a request
     result = curl_easy_perform(curl);
 
-    formatfunc(curl);
+    verse_of_the_day_func(curl);
     // Remember to free the buffer
     free(chunk.response);
     curl_easy_cleanup(curl);
