@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <curl/curl.h>
 #include <err.h>
+#include <iso646.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stddef.h>
@@ -14,6 +15,48 @@
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+
+struct memory {
+  char *response;
+  size_t size;
+};
+
+static size_t cb(char *data, size_t size, size_t nmemb, void *clientp) {
+  size_t realsize = nmemb;
+  struct memory *mem = (struct memory *)clientp;
+
+  char *ptr = realloc(mem->response, mem->size + realsize + 1);
+  if (!ptr) {
+    return 0; // Out of memory.
+  }
+
+  mem->response = ptr;
+  memcpy(&(mem->response[mem->size]), data, realsize);
+  mem->size += realsize;
+  mem->response[mem->size] = 0;
+  return realsize;
+}
+
+struct memory chunk = {0};
+CURLcode result;
+
+// Write the Daily verse to .bible_cache
+void update_state_machine(const char *book, const char *version,
+                          const char *chapter_num, const char *num,
+                          cJSON *text) {
+  FILE *fptr;
+
+  fptr = fopen(".bible_cache", "a");
+  if (fptr == NULL) {
+    printf("Error opening file!\n");
+    return;
+  }
+
+  fprintf(fptr,
+          "||  The Book of %s: ||  (%s)  ||  Chapter:  %s  ||  Verse:  %s  ||  "
+          "\n%s",
+          book, version, chapter_num, num, text->valuestring);
+}
 
 // State Machine Function
 void state_machine() {
@@ -33,7 +76,7 @@ void state_machine() {
   strftime(buffer, sizeof(buffer), "%D %r", time_info);
 
   // 4. Open file for writing ("w" overwrites, "a" appends)
-  fptr = fopen(".bible_cache", "w");
+  fptr = fopen(".bible_cache", "a");
   if (fptr == NULL) {
     printf("Error opening file!\n");
     return;
@@ -62,30 +105,6 @@ void lib_curl_func() {
     curl_easy_cleanup(handle);
   }
 }
-
-struct memory {
-  char *response;
-  size_t size;
-};
-
-static size_t cb(char *data, size_t size, size_t nmemb, void *clientp) {
-  size_t realsize = nmemb;
-  struct memory *mem = (struct memory *)clientp;
-
-  char *ptr = realloc(mem->response, mem->size + realsize + 1);
-  if (!ptr) {
-    return 0; // Out of memory.
-  }
-
-  mem->response = ptr;
-  memcpy(&(mem->response[mem->size]), data, realsize);
-  mem->size += realsize;
-  mem->response[mem->size] = 0;
-  return realsize;
-}
-
-struct memory chunk = {0};
-CURLcode result;
 
 void verse_of_the_day_func(cJSON *Bible_Data) {
   /*
@@ -134,6 +153,7 @@ void verse_of_the_day_func(cJSON *Bible_Data) {
   printf("||  The Book of %s: ||  (%s)  ||  Chapter:  %s  ||  Verse:  %s  ||  "
          "\n%s",
          book, version, chapter_num, num, text->valuestring);
+  update_state_machine(book, version, chapter_num, num, text);
 }
 
 void api_call() {
