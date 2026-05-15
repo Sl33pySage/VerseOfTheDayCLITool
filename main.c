@@ -40,7 +40,7 @@ void state_machine() {
   }
 
   // 5. Write the formatted string to the file
-  fprintf(fptr, "Last Successfully Ran: %s", buffer);
+  fprintf(fptr, "Last Successfully Ran: %s\n", buffer);
 
   // 6. Close the file
   fclose(fptr);
@@ -154,6 +154,7 @@ void api_call() {
     result = curl_easy_perform(curl);
 
     verse_of_the_day_func(curl);
+
     // Remember to free the buffer
     free(chunk.response);
     curl_easy_cleanup(curl);
