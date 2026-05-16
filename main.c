@@ -16,10 +16,14 @@
 #include <time.h>
 #include <unistd.h>
 
+CURLcode result;
+
 struct memory {
   char *response;
   size_t size;
 };
+
+struct memory chunk = {0};
 
 static size_t cb(char *data, size_t size, size_t nmemb, void *clientp) {
   size_t realsize = nmemb;
@@ -36,9 +40,6 @@ static size_t cb(char *data, size_t size, size_t nmemb, void *clientp) {
   mem->response[mem->size] = 0;
   return realsize;
 }
-
-struct memory chunk = {0};
-CURLcode result;
 
 // Write the Daily verse to .bible_cache
 void update_state_machine(const char *book, const char *version,
@@ -88,7 +89,7 @@ void state_machine() {
   // 6. Close the file
   fclose(fptr);
   printf(
-      "Date and time successfully stored in .bible_cache:\n'Last Sucessfully "
+      "\nDate and time successfully stored in .bible_cache:\n'Last Sucessfully "
       "Ran: %s'\n",
       buffer);
 }
@@ -184,4 +185,5 @@ void api_call() {
 int main(void) {
   state_machine();
   api_call();
+  return 0;
 }
