@@ -57,6 +57,7 @@ void update_state_machine(const char *book, const char *version,
           "||  The Book of %s: ||  (%s)  ||  Chapter:  %s  ||  Verse:  %s  ||  "
           "\n%s",
           book, version, chapter_num, num, text->valuestring);
+  fclose(fptr);
 }
 
 // State Machine Function
